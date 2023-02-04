@@ -13,6 +13,18 @@ export var player_jumpheight = 10
 export var player_speed = 10
 onready var head = $Head
 
+# Player Skills
+export var PLAYER_SKILLS = "------------------"
+export var woodcutting = 1
+export var woodcutting_xp = 0
+export var woodcutting_xpmax = 500 # XP required to level up woodcutting
+
+# Buildings
+var placable_buildings = {
+	"block": load("res://Scenes/BuildableStructures/BlockBuilding.tscn")
+}
+
+
 
 
 
@@ -36,10 +48,11 @@ func _physics_process(delta):
 	if not is_on_floor():
 		gravity_vec += Vector3.DOWN * player_gravity * delta
 	else:
-		gravity_vec = Vector3.ZERO
+		gravity_vec = -get_floor_normal() * player_gravity
 	
 	if Input.is_action_just_pressed("pjump") and is_on_floor():
 		gravity_vec = Vector3.UP * player_jumpheight
+		print(gravity_vec)
 
 
 	# movement controls
@@ -53,10 +66,15 @@ func _physics_process(delta):
 	elif Input.is_action_pressed("pright"):
 		direction += transform.basis.x
 	
+
+	# Building
+	if Input.is_action_just_pressed("placebuilding"):
+		var instance = placable_buildings["block"].instance()
+		
+	
 	direction = direction.normalized() # makes it so you don't move faster when going diagonally
 	h_velocity = h_velocity.linear_interpolate(direction * player_speed, h_acceleration * delta)
 	player_movement.z = h_velocity.z + gravity_vec.z
 	player_movement.x = h_velocity.x + gravity_vec.x
-	print(is_on_floor())
 	player_movement.y = gravity_vec.y
-	move_and_slide(player_movement, get_floor_normal())
+	move_and_slide(player_movement, Vector3.UP)

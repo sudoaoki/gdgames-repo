@@ -15,14 +15,17 @@ onready var head = $Head
 
 # Player Skills
 export var PLAYER_SKILLS = "------------------"
-export var woodcutting = 1
+export var woodcutting = 1 # Woodcutting skill level
 export var woodcutting_xp = 0
 export var woodcutting_xpmax = 500 # XP required to level up woodcutting
+export var mining = 1 # Mining skill level
+export var mining_xp = 0
+export var mining_xpmax = 500 # XP required to level up mining
 
-# Buildings
-var placable_buildings = {
-	"block": load("res://Scenes/BuildableStructures/BlockBuilding.tscn")
-}
+# Player Resources
+export var PLAYER_RESOURCES = "------------------"
+export var wood_logs = 10000
+export var stone_bricks = 10000
 
 
 
@@ -65,11 +68,6 @@ func _physics_process(delta):
 		direction -= transform.basis.x
 	elif Input.is_action_pressed("pright"):
 		direction += transform.basis.x
-	
-
-	# Building
-	if Input.is_action_just_pressed("placebuilding"):
-		var instance = placable_buildings["block"].instance()
 		
 	
 	direction = direction.normalized() # makes it so you don't move faster when going diagonally
